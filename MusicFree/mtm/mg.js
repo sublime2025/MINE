@@ -530,7 +530,7 @@ async function getMediaSource(musicItem, quality) {
     };
 }
 module.exports = {
-    platform: "Migu Music",
+    platform: "咪咕",
     author: "ikun",
     version: "0.0.8",
     appVersion: ">0.1.0-alpha.0",
