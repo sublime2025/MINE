@@ -171,20 +171,20 @@ async function getTopLists() {
     })).data.data.info;
     const res = [
         {
-            title: "鐑棬姒滃崟",
+            title: "热门榜单",
             data: [],
         },
         {
-            title: "鐗硅壊闊充箰姒�",
+            title: "特色音乐榜",
             data: [],
         },
         {
-            title: "鍏ㄧ悆姒�",
+            title: "全球榜",
             data: [],
         },
     ];
     const extra = {
-        title: "鍏朵粬",
+        title: "其他",
         data: [],
     };
     lists.forEach((item) => {
@@ -343,7 +343,6 @@ async function importMusicSheet(urlLike) {
 }
 module.exports = {
     platform: "酷狗",
-      author: '猫头猫',
     version: "0.1.3",
     appVersion: ">0.1.0-alpha.0",
     order: 15,
@@ -352,8 +351,8 @@ module.exports = {
     primaryKey: ["id", "album_id", "album_audio_id"],
     hints: {
         importMusicSheet: [
-            "浠呮敮鎸侀叿鐙桝PP閫氳繃閰风嫍鐮佸鍏ワ紝杈撳叆绾暟瀛楅叿鐙楃爜鍗冲彲銆�",
-            "瀵煎叆杩囩▼涓細杩囨护鎺夋墍鏈塚IP/璇曞惉/鏀惰垂闊充箰锛屽鍏ユ椂闂村拰姝屽崟澶у皬鏈夊叧锛岃鑰愬績绛夊緟",
+            "仅支持酷狗APP通过酷狗码导入，输入纯数字酷狗码即可。",
+            "导入过程中会过滤掉所有VIP/试听/收费音乐，导入时间和歌单大小有关，请耐心等待",
         ],
     },
     async search(query, page, type) {
