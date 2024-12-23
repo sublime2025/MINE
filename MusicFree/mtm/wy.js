@@ -492,7 +492,8 @@ async function getMusicSheetInfo(sheet, page) {
     };
 }
 module.exports = {
-    platform: "缃戞槗浜�",
+    platform: "网易",
+      author: '猫头猫',
     version: "0.1.2",
     appVersion: '>0.1.0-alpha.0',
     srcUrl: "http://adad23u.appinstall.life/dist/netease/index.js",

@@ -342,7 +342,8 @@ async function importMusicSheet(urlLike) {
     return musicList;
 }
 module.exports = {
-    platform: "閰风嫍",
+    platform: "酷狗",
+      author: '猫头猫',
     version: "0.1.3",
     appVersion: ">0.1.0-alpha.0",
     order: 15,
