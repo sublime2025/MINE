@@ -2,52 +2,52 @@
     "plugins": [
         {
 			"name": "小秋音乐",
-			"url": "https://ghgo.xyz/raw.githubusercontent.com/sublime2025/MINE/refs/heads/master/MusicFree/Huibq/xq.js",
+			"url": "https://gh-proxy.com/raw.githubusercontent.com/sublime2025/MINE/refs/heads/master/MusicFree/Huibq/xq.js",
 			"version": "0.3.0"
 		},
 		{
 			"name": "小蜗音乐",
-			"url": "https://ghgo.xyz/raw.githubusercontent.com/sublime2025/MINE/refs/heads/master/MusicFree/Huibq/xw.js",
+			"url": "https://gh-proxy.com/raw.githubusercontent.com/sublime2025/MINE/refs/heads/master/MusicFree/Huibq/xw.js",
 			"version": "0.3.0"
 		},
 		{
 			"name": "小芸音乐",
-			"url": "https://ghgo.xyz/raw.githubusercontent.com/sublime2025/MINE/refs/heads/master/MusicFree/Huibq/xy.js",
+			"url": "https://gh-proxy.com/raw.githubusercontent.com/sublime2025/MINE/refs/heads/master/MusicFree/Huibq/xy.js",
 			"version": "0.3.0"
 		},
 		{
 			"name": "小枸音乐",
-			"url": "https://ghgo.xyz/raw.githubusercontent.com/sublime2025/MINE/refs/heads/master/MusicFree/Huibq/xg.js",
+			"url": "https://gh-proxy.com/raw.githubusercontent.com/sublime2025/MINE/refs/heads/master/MusicFree/Huibq/xg.js",
 			"version": "0.3.0"
 		},
 		{
 			"name": "小蜜音乐",
-			"url": "https://ghgo.xyz/raw.githubusercontent.com/sublime2025/MINE/refs/heads/master/MusicFree/Huibq/xm.js",
+			"url": "https://gh-proxy.com/raw.githubusercontent.com/sublime2025/MINE/refs/heads/master/MusicFree/Huibq/xm.js",
 			"version": "0.3.0"
 		},
 		{
 			"name": "酷狗",
-			"url": "https://ghgo.xyz/raw.githubusercontent.com/sublime2025/MINE/refs/heads/master/MusicFree/mtm/kg.js",
+			"url": "https://gh-proxy.com/raw.githubusercontent.com/sublime2025/MINE/refs/heads/master/MusicFree/mtm/kg.js",
 			"version": "0.1.4"
 		},
 		{
 			"name": "酷我",
-			"url": "https://ghgo.xyz/raw.githubusercontent.com/sublime2025/MINE/refs/heads/master/MusicFree/mtm/kw.js",
+			"url": "https://gh-proxy.com/raw.githubusercontent.com/sublime2025/MINE/refs/heads/master/MusicFree/mtm/kw.js",
 			"version": "0.1.6"
 		},
 		{
 			"name": "腾讯",
-			"url": "https://ghgo.xyz/raw.githubusercontent.com/sublime2025/MINE/refs/heads/master/MusicFree/mtm/tx.js",
+			"url": "https://gh-proxy.com/raw.githubusercontent.com/sublime2025/MINE/refs/heads/master/MusicFree/mtm/tx.js",
 			"version": "0.2.1"
 		},
 		{
 			"name": "咪咕",
-			"url": "https://ghgo.xyz/raw.githubusercontent.com/sublime2025/MINE/refs/heads/master/MusicFree/mtm/mg.js",
+			"url": "https://gh-proxy.com/raw.githubusercontent.com/sublime2025/MINE/refs/heads/master/MusicFree/mtm/mg.js",
 			"version": "0.2.1"
 		},    
 		{
 			"name": "网易",
-			"url": "https://ghgo.xyz/raw.githubusercontent.com/sublime2025/MINE/refs/heads/master/MusicFree/mtm/wy.js",
+			"url": "https://gh-proxy.com/raw.githubusercontent.com/sublime2025/MINE/refs/heads/master/MusicFree/mtm/wy.js",
 			"version": "0.2.2"
 		}
     ]
