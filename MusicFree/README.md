@@ -3,5 +3,5 @@
 
 整合接口
 ````bash
-https://gh-proxy.com/raw.githubusercontent.com/sublime2025/MINE/refs/heads/master/MusicFree/Box.json
+https://raw.gitmirror.com/sublime2025/MINE/refs/heads/master/MusicFree/Box.json
 ````
