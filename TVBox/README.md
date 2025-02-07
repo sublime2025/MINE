@@ -3,7 +3,7 @@
 
 1：多仓接口
 ````bash
-https://gh-proxy.com/raw.githubusercontent.com/sublime2025/MINE/refs/heads/master/TVBox/Box.json
+https://raw.gitmirror.com/sublime2025/MINE/refs/heads/master/TVBox/Box.json
 ````
 
 - 软件下载链接如下：
