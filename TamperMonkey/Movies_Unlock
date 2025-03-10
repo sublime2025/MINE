@@ -48,6 +48,7 @@
         {title:"接口3",type:"1",url:"https://jx.77flv.cc/?url="},
         {title:"接口4",type:"1",url:"https://jx.2s0.cn/player/?url="},
         {title:"接口5",type:"1",url:"https://jx.nnxv.cn/tv.php?url="},
+	{title:"接口6",type:"1",url:"https://jx.xmflv.com/?url="},
     ];
 
     //自定义 log 函数
