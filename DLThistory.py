@@ -5,7 +5,7 @@ from html.parser import HTMLParser
 
 # ================ define const ===============
 BASEPATH = "D:/"
-HTMLURLS = ["http://datachart.500.com/ssq/history/newinc/history.php"]
+HTMLURLS = ["http://datachart.500.com/dlt/history/newinc/history.php?start=07001&end=25098"]
 HEADERS = [
             {
             "Host": "datachart.500.com",
@@ -14,7 +14,7 @@ HEADERS = [
             "X-Requested-With": "XMLHttpRequest",
             "User-Agent": "Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62."
                           "0.3202.94 Safari/537.36",
-            "Referer": "http://datachart.500.com/ssq/history/history.shtml",
+            "Referer": "http://datachart.500.com/dlt/history/history.shtml",
             "Accept-Encoding": "gzip, deflate",
             "Accept-Language":"zh-CN,zh;q=0.9",
             "Cookie":"ck_RegFromUrl=http%3A//www.500.com/; sdc_session=1533916356798; _jzqy=1.1528606472.1533916357.1."
@@ -38,16 +38,15 @@ PARAMS = [
           {
             'czId':'1',
             'beginIssue':'1',
-            'endIssue':'2025096',
+            'endIssue':'2025098',
             'currentPageNum':'1',
           },
          ]
-DATAPATHS = ["lot_500_ssq.txt",
-             "lot_zhcw_ssq.txt"]
+DATAPATHS = ["lot_500_dlt.txt"]
 
 
 # ================ private parser class ===============
-class Parser500ssq(HTMLParser):
+class Parser500dlt(HTMLParser):
     flag_tbody = False
     flag_tr = False
     flag_td = False
@@ -96,7 +95,7 @@ class Parser500ssq(HTMLParser):
     def handle_charref(self, name):           # special string: like &#
         print('&#%s;' % name)
 '''
-class ParserZhcwssq(HTMLParser):
+class ParserZhcwdlt(HTMLParser):
     flag_tbody = False
     flag_tr = False
     flag_td = False
@@ -153,9 +152,9 @@ class ParserZhcwssq(HTMLParser):
         if(data.strip() == '分页条'):
             self.flag_nextpage = True
 # ================ private functions ===============
-def parse500ssq(html,datapath):
+def parse500dlt(html,datapath):
     print("start grabbing...")
-    parser = Parser500ssq()
+    parser = Parser500dlt()
     parser.feed(html)
     print(parser.result)
     with open(BASEPATH + datapath, 'w') as f:
@@ -165,9 +164,9 @@ def parse500ssq(html,datapath):
             f.write("\n")
     print("finished.")
 
-def parseZhcwssq(html,datapath,htmlurl,method,headers,params):
+def parseZhcwdlt(html,datapath,htmlurl,method,headers,params):
     print("start grabbing...")
-    parser = ParserZhcwssq()
+    parser = ParserZhcwdlt()
     wmode = 'w'
     while(1):
         parser.feed(html)
@@ -201,6 +200,6 @@ if __name__ == "__main__":
     for i in range(len(HTMLURLS)):
         html = getHtml(HTMLURLS[i], 'get', HEADERS[i],PARAMS[i])
         if i == 0:
-            parse500ssq(html,DATAPATHS[i])
+            parse500dlt(html,DATAPATHS[i])
         elif i == 1:
-            parseZhcwssq(html, DATAPATHS[i],HTMLURLS[i],'get',HEADERS[i],PARAMS[i])
+            parseZhcwdlt(html, DATAPATHS[i],HTMLURLS[i],'get',HEADERS[i],PARAMS[i])
