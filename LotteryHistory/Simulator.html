@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>双色球抽奖模拟器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .title {
+            color: white;
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .game-section {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .number-selection {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 2px solid rgba(255,255,255,0.2);
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .number-grid {
+            display: grid;
+            gap: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .red-grid {
+            grid-template-columns: repeat(11, 1fr);
+        }
+
+        .blue-grid {
+            grid-template-columns: repeat(8, 1fr);
+        }
+
+        .number-btn {
+            width: 35px;
+            height: 35px;
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 12px;
+        }
+
+        .red-number {
+            background: linear-gradient(145deg, #ff6b6b, #d63031);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .red-number:hover {
+            transform: scale(1.1);
+        }
+
+        .red-number.selected {
+            background: linear-gradient(145deg, #ffd700, #ff8c00) !important;
+            box-shadow: 0 0 15px rgba(255,215,0,0.8) !important;
+            transform: scale(1.1);
+        }
+
+        .blue-number {
+            background: linear-gradient(145deg, #4dabf7, #1864ab);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .blue-number:hover {
+            transform: scale(1.1);
+        }
+
+        .blue-number.selected {
+            background: linear-gradient(145deg, #ffd700, #ff8c00) !important;
+            box-shadow: 0 0 15px rgba(255,215,0,0.8) !important;
+            transform: scale(1.1);
+        }
+
+        .selection-info {
+            color: white;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 1rem 0;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+        }
+
+        .btn-primary {
+            background: linear-gradient(145deg, #00d2ff, #3a47d5);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(145deg, #ff6b6b, #d63031);
+        }
+
+        .btn-success {
+            background: linear-gradient(145deg, #51cf66, #40c057);
+        }
+
+        .btn-warning {
+            background: linear-gradient(145deg, #ffd43b, #fab005);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .sphere-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 10px auto;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .red-sphere {
+            background: radial-gradient(circle at 30% 30%, #ff6b6b, #d63031, #a71e2e);
+            box-shadow: inset -20px -20px 40px rgba(0,0,0,0.3), inset 20px 20px 40px rgba(255,255,255,0.2);
+        }
+
+        .blue-sphere {
+            background: radial-gradient(circle at 30% 30%, #4dabf7, #1864ab, #0c4a78);
+            box-shadow: inset -20px -20px 40px rgba(0,0,0,0.3), inset 20px 20px 40px rgba(255,255,255,0.2);
+        }
+
+        .ball {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 8px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
+
+        .red-ball {
+            background: radial-gradient(circle at 30% 30%, #ff9999, #cc0000);
+        }
+
+        .blue-ball {
+            background: radial-gradient(circle at 30% 30%, #6bb6ff, #0066cc);
+        }
+
+        .result-area {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 1rem 0;
+            min-height: 50px;
+        }
+
+        .result-ball {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            animation: bounceIn 0.6s ease-out forwards;
+        }
+
+        .result-red {
+            background: radial-gradient(circle at 30% 30%, #ff9999, #cc0000);
+        }
+
+        .result-blue {
+            background: radial-gradient(circle at 30% 30%, #6bb6ff, #0066cc);
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .status {
+            color: white;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 16px;
+            font-weight: bold;
+            min-height: 25px;
+        }
+
+        .bottom-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .bet-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 10px 0;
+            padding: 10px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+        }
+
+        .mini-ball {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 10px;
+            margin: 2px;
+        }
+
+        .mini-red {
+            background: linear-gradient(145deg, #ff6b6b, #d63031);
+        }
+
+        .mini-blue {
+            background: linear-gradient(145deg, #4dabf7, #1864ab);
+        }
+        
+        .mini-ball.matched {
+            background: linear-gradient(145deg, #ffd700, #ff8c00) !important;
+            box-shadow: 0 0 10px rgba(255,215,0,0.8);
+        }
+
+        .comparison-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 10px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+        }
+        
+        .bet-numbers {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .prize-info {
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .bet-count-section {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .bet-count-section input {
+            width: 60px;
+            padding: 8px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 10px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .prize-table {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .prize-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            font-size: 12px;
+        }
+
+        @media (max-width: 1200px) {
+            .main-layout, .bottom-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .red-grid {
+                grid-template-columns: repeat(6, 1fr);
+            }
+            .blue-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">🎱 双色球抽奖模拟器 🎱</h1>
+
+        <div class="main-layout">
+            <div class="game-section">
+                <h2 style="color: white; text-align: center; margin-bottom: 1.5rem;">选择您的幸运号码</h2>
+
+                <div class="number-selection">
+                    <div class="section-title">红球区 (选择6个号码)</div>
+                    <div class="number-grid red-grid" id="redGrid"></div>
+                    <div class="selection-info" id="redInfo">已选择: 0/6</div>
+                </div>
+
+                <div class="number-selection">
+                    <div class="section-title">蓝球区 (选择1个号码)</div>
+                    <div class="number-grid blue-grid" id="blueGrid"></div>
+                    <div class="selection-info" id="blueInfo">已选择: 0/1</div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn btn-secondary" onclick="randomSelect()">机选一注</button>
+                    <button class="btn btn-primary" onclick="clearSelection()">清空选择</button>
+                    <button class="btn btn-success" id="confirmBtn" onclick="confirmBet()" disabled>确认投注</button>
+                </div>
+
+                <div class="bet-count-section">
+                    <span>自选注数:</span>
+                    <input type="number" id="betCount" value="1" min="1" max="10">
+                    <span>注</span>
+                    <button class="btn btn-warning" onclick="randomMultipleBets()">机选多注</button>
+                    <button class="btn btn-primary" onclick="clearAllBets()">清空全部</button>
+                </div>
+            </div>
+
+            <div class="game-section">
+                <h2 style="color: white; text-align: center; margin-bottom: 1rem;">开奖区域</h2>
+                <div style="display: flex; justify-content: center; gap: 2rem;">
+                    <div>
+                        <div style="color: white; text-align: center; margin-bottom: 1rem; font-size: 14px;">红球球筒</div>
+                        <div class="sphere-container red-sphere" id="redSphere"></div>
+                    </div>
+                    <div>
+                        <div style="color: white; text-align: center; margin-bottom: 1rem; font-size: 14px;">蓝球球筒</div>
+                        <div class="sphere-container blue-sphere" id="blueSphere"></div>
+                    </div>
+                </div>
+
+                <div class="status" id="status">请先投注，然后点击开始开奖</div>
+                <div style="text-align: center; margin: 1rem 0;">
+                    <button class="btn btn-success" id="drawBtn" onclick="startDraw()" disabled>开始开奖</button>
+                </div>
+                <div class="result-area" id="resultArea"></div>
+            </div>
+        </div>
+
+        <div class="bottom-layout">
+            <div class="game-section">
+                <h3 style="color: white; text-align: center; margin-bottom: 1rem;">已投注号码</h3>
+                <div id="betList" style="color: white;">暂无投注</div>
+            </div>
+
+            <div class="game-section">
+                <h3 style="color: white; text-align: center; margin-bottom: 1rem;">中奖结果对比</h3>
+                <div style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 10px; margin-bottom: 1rem; display: none;" id="finalResultContainer">
+                    <div style="color: white; text-align: center; margin-bottom: 1rem; font-size: 16px; font-weight: bold;">本期开奖号码</div>
+                    <div class="result-area" id="finalResult"></div>
+                </div>
+                <div id="comparisonResults">等待开奖...</div>
+                <div class="prize-table">
+                    <div style="color: white; text-align: center; margin-bottom: 1rem; font-weight: bold;">双色球奖项说明</div>
+                    <div class="prize-row"><span>一等奖</span><span>6+1 (浮动奖金)</span></div>
+                    <div class="prize-row"><span>二等奖</span><span>6+0 (浮动奖金)</span></div>
+                    <div class="prize-row"><span>三等奖</span><span>5+1 (固定3000元)</span></div>
+                    <div class="prize-row"><span>四等奖</span><span>5+0 或 4+1 (固定200元)</span></div>
+                    <div class="prize-row"><span>五等奖</span><span>4+0 或 3+1 (固定10元)</span></div>
+                    <div class="prize-row"><span>六等奖</span><span>2+1 或 1+1 或 0+1 (固定5元)</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedReds = [];
+        let selectedBlue = null;
+        let betList = [];
+        let drawResult = {reds: [], blue: null};
+        let isDrawing = false;
+
+        // 页面加载后初始化
+        window.addEventListener('load', function() {
+            initNumberGrids();
+            initSphereBalls();
+        });
+
+        // 初始化选号区域
+        function initNumberGrids() {
+            const redGrid = document.getElementById('redGrid');
+            const blueGrid = document.getElementById('blueGrid');
+
+            // 创建红球按钮
+            for (let i = 1; i <= 33; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'number-btn red-number';
+                btn.textContent = i.toString().padStart(2, '0');
+                btn.onclick = function() { selectRedNumber(i); };
+                redGrid.appendChild(btn);
+            }
+
+            // 创建蓝球按钮
+            for (let i = 1; i <= 16; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'number-btn blue-number';
+                btn.textContent = i.toString().padStart(2, '0');
+                btn.onclick = function() { selectBlueNumber(i); };
+                blueGrid.appendChild(btn);
+            }
+        }
+
+        // 选择红球
+        function selectRedNumber(number) {
+            const btn = document.querySelector(`#redGrid .number-btn:nth-child(${number})`);
+
+            if (selectedReds.includes(number)) {
+                selectedReds = selectedReds.filter(n => n !== number);
+                btn.classList.remove('selected');
+            } else {
+                if (selectedReds.length < 6) {
+                    selectedReds.push(number);
+                    btn.classList.add('selected');
+                } else {
+                    alert('红球最多选择6个！');
+                    return;
+                }
+            }
+
+            updateRedInfo();
+            updateConfirmButton();
+        }
+
+        // 选择蓝球
+        function selectBlueNumber(number) {
+            // 清除所有蓝球选中状态
+            document.querySelectorAll('#blueGrid .number-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+
+            selectedBlue = number;
+            const btn = document.querySelector(`#blueGrid .number-btn:nth-child(${number})`);
+            btn.classList.add('selected');
+
+            updateBlueInfo();
+            updateConfirmButton();
+        }
+
+        // 更新红球信息
+        function updateRedInfo() {
+            document.getElementById('redInfo').textContent = `已选择: ${selectedReds.length}/6`;
+        }
+
+        // 更新蓝球信息
+        function updateBlueInfo() {
+            document.getElementById('blueInfo').textContent = `已选择: ${selectedBlue ? 1 : 0}/1`;
+        }
+
+        // 更新确认按钮状态
+        function updateConfirmButton() {
+            const confirmBtn = document.getElementById('confirmBtn');
+            confirmBtn.disabled = !(selectedReds.length === 6 && selectedBlue !== null);
+        }
+
+        // 机选一注
+        function randomSelect() {
+            clearSelection();
+
+            // 随机选择6个红球
+            const availableReds = [];
+            for (let i = 1; i <= 33; i++) {
+                availableReds.push(i);
+            }
+
+            for (let i = 0; i < 6; i++) {
+                const randomIndex = Math.floor(Math.random() * availableReds.length);
+                const number = availableReds.splice(randomIndex, 1)[0];
+                selectedReds.push(number);
+
+                const btn = document.querySelector(`#redGrid .number-btn:nth-child(${number})`);
+                btn.classList.add('selected');
+            }
+
+            // 随机选择1个蓝球
+            selectedBlue = Math.floor(Math.random() * 16) + 1;
+            const blueBtn = document.querySelector(`#blueGrid .number-btn:nth-child(${selectedBlue})`);
+            blueBtn.classList.add('selected');
+
+            updateRedInfo();
+            updateBlueInfo();
+            updateConfirmButton();
+        }
+
+        // 清空选择
+        function clearSelection() {
+            selectedReds = [];
+            selectedBlue = null;
+
+            document.querySelectorAll('.number-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+
+            updateRedInfo();
+            updateBlueInfo();
+            updateConfirmButton();
+        }
+
+        // 确认投注
+        function confirmBet() {
+            if (selectedReds.length !== 6 || selectedBlue === null) {
+                alert('请选择6个红球和1个蓝球！');
+                return;
+            }
+
+            const bet = {
+                reds: [...selectedReds].sort((a, b) => a - b),
+                blue: selectedBlue,
+                id: Date.now()
+            };
+
+            betList.push(bet);
+            updateBetList();
+            clearSelection();
+            updateDrawButton();
+            document.getElementById('status').textContent = '投注成功！点击开始开奖';
+        }
+
+        // 机选多注
+        function randomMultipleBets() {
+            const count = parseInt(document.getElementById('betCount').value) || 1;
+
+            for (let i = 0; i < count; i++) {
+                const availableReds = [];
+                for (let j = 1; j <= 33; j++) {
+                    availableReds.push(j);
+                }
+
+                const reds = [];
+                for (let j = 0; j < 6; j++) {
+                    const randomIndex = Math.floor(Math.random() * availableReds.length);
+                    const number = availableReds.splice(randomIndex, 1)[0];
+                    reds.push(number);
+                }
+
+                const blue = Math.floor(Math.random() * 16) + 1;
+
+                const bet = {
+                    reds: reds.sort((a, b) => a - b),
+                    blue: blue,
+                    id: Date.now() + i
+                };
+
+                betList.push(bet);
+            }
+
+            updateBetList();
+            updateDrawButton();
+            document.getElementById('status').textContent = `成功添加${count}注投注！`;
+        }
+
+        // 清空全部投注
+        function clearAllBets() {
+            betList = [];
+            updateBetList();
+            updateDrawButton();
+            document.getElementById('status').textContent = '已清空所有投注';
+        }
+
+        // 更新投注列表
+        function updateBetList() {
+            const betListDiv = document.getElementById('betList');
+
+            if (betList.length === 0) {
+                betListDiv.innerHTML = '暂无投注';
+                return;
+            }
+
+            let html = '';
+            betList.forEach((bet, index) => {
+                html += `<div class="bet-item">
+                    <div style="margin-right: 10px; color: #ffd700; font-weight: bold;">第${index + 1}注:</div>
+                    <div class="bet-numbers">`;
+
+                bet.reds.forEach(red => {
+                    html += `<span class="mini-ball mini-red">${red.toString().padStart(2, '0')}</span>`;
+                });
+                html += ` <span style="color: white; margin: 0 5px;">+</span> <span class="mini-ball mini-blue">${bet.blue.toString().padStart(2, '0')}</span>`;
+                html += `</div></div>`;
+            });
+
+            betListDiv.innerHTML = html;
+        }
+
+        // 更新开奖按钮
+        function updateDrawButton() {
+            const drawBtn = document.getElementById('drawBtn');
+            drawBtn.disabled = betList.length === 0;
+        }
+
+        // 初始化球筒
+        function initSphereBalls() {
+            const redSphere = document.getElementById('redSphere');
+            const blueSphere = document.getElementById('blueSphere');
+
+            redSphere.innerHTML = '';
+            blueSphere.innerHTML = '';
+
+            // 创建红球
+            for (let i = 1; i <= 33; i++) {
+                const ball = document.createElement('div');
+                ball.className = 'ball red-ball';
+                ball.textContent = i;
+                ball.style.left = Math.random() * 184 + 'px';
+                ball.style.top = Math.random() * 184 + 'px';
+                redSphere.appendChild(ball);
+            }
+
+            // 创建蓝球
+            for (let i = 1; i <= 16; i++) {
+                const ball = document.createElement('div');
+                ball.className = 'ball blue-ball';
+                ball.textContent = i;
+                ball.style.left = Math.random() * 184 + 'px';
+                ball.style.top = Math.random() * 184 + 'px';
+                blueSphere.appendChild(ball);
+            }
+        }
+
+        // 开始开奖
+        async function startDraw() {
+            if (isDrawing || betList.length === 0) return;
+
+            isDrawing = true;
+            document.getElementById('drawBtn').disabled = true;
+            document.getElementById('resultArea').innerHTML = '';
+            document.getElementById('finalResultContainer').style.display = 'none';
+
+            // 重置开奖结果
+            drawResult = {reds: [], blue: null};
+
+            // 开奖动画
+            document.getElementById('status').textContent = '正在开奖中...';
+
+            // 模拟开奖延迟
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
+            // 生成开奖号码
+            const availableReds = [];
+            for (let i = 1; i <= 33; i++) {
+                availableReds.push(i);
+            }
+
+            for (let i = 0; i < 6; i++) {
+                await new Promise(resolve => setTimeout(resolve, 500));
+                const randomIndex = Math.floor(Math.random() * availableReds.length);
+                const number = availableReds.splice(randomIndex, 1)[0];
+                drawResult.reds.push(number);
+
+                const ball = document.createElement('div');
+                ball.className = 'result-ball result-red';
+                ball.textContent = number.toString().padStart(2, '0');
+                document.getElementById('resultArea').appendChild(ball);
+            }
+
+            // 蓝球开奖
+            await new Promise(resolve => setTimeout(resolve, 500));
+            drawResult.blue = Math.floor(Math.random() * 16) + 1;
+            const blueBall = document.createElement('div');
+            blueBall.className = 'result-ball result-blue';
+            blueBall.textContent = drawResult.blue.toString().padStart(2, '0');
+            document.getElementById('resultArea').appendChild(blueBall);
+
+            // 排序红球结果
+            drawResult.reds.sort((a, b) => a - b);
+
+            // 显示最终结果
+            showFinalResult();
+
+            isDrawing = false;
+        }
+
+        // 显示最终开奖结果
+        function showFinalResult() {
+            document.getElementById('status').textContent = '开奖完成！';
+
+            // 显示开奖号码
+            const finalResultDiv = document.getElementById('finalResult');
+            finalResultDiv.innerHTML = '';
+
+            drawResult.reds.forEach(red => {
+                const ball = document.createElement('div');
+                ball.className = 'result-ball result-red';
+                ball.textContent = red.toString().padStart(2, '0');
+                finalResultDiv.appendChild(ball);
+            });
+
+            const blueBall = document.createElement('div');
+            blueBall.className = 'result-ball result-blue';
+            blueBall.textContent = drawResult.blue.toString().padStart(2, '0');
+            finalResultDiv.appendChild(blueBall);
+
+            document.getElementById('finalResultContainer').style.display = 'block';
+
+            // 计算中奖结果
+            calculatePrizes();
+        }
+
+        // 计算中奖等级
+        function calculatePrizeLevel(betReds, betBlue, drawReds, drawBlue) {
+            const matchedReds = betReds.filter(red => drawReds.includes(red)).length;
+            const matchedBlue = betBlue === drawBlue ? 1 : 0;
+
+            if (matchedReds === 6 && matchedBlue === 1) return "一等奖";
+            if (matchedReds === 6 && matchedBlue === 0) return "二等奖";
+            if (matchedReds === 5 && matchedBlue === 1) return "三等奖";
+            if ((matchedReds === 5 && matchedBlue === 0) || (matchedReds === 4 && matchedBlue === 1)) return "四等奖";
+            if ((matchedReds === 4 && matchedBlue === 0) || (matchedReds === 3 && matchedBlue === 1)) return "五等奖";
+            if ((matchedReds === 2 && matchedBlue === 1) || (matchedReds === 1 && matchedBlue === 1) || (matchedReds === 0 && matchedBlue === 1)) return "六等奖";
+
+            return "未中奖";
+        }
+
+        // 计算所有投注的中奖情况
+        function calculatePrizes() {
+            const comparisonResultsDiv = document.getElementById('comparisonResults');
+            if (betList.length === 0) {
+                comparisonResultsDiv.innerHTML = '您没有投注，无法进行对比。';
+                return;
+            }
+
+            let html = '';
+            betList.forEach((bet, index) => {
+                const prize = calculatePrizeLevel(bet.reds, bet.blue, drawResult.reds, drawResult.blue);
+                html += `
+                <div class="comparison-row">
+                    <div style="flex-grow: 1;">第${index + 1}注:</div>
+                    <div class="bet-numbers" style="flex-grow: 1;">`;
+
+                bet.reds.forEach(red => {
+                    const isMatched = drawResult.reds.includes(red);
+                    html += `<span class="mini-ball mini-red ${isMatched ? 'matched' : ''}">${red.toString().padStart(2, '0')}</span>`;
+                });
+
+                const isBlueMatched = bet.blue === drawResult.blue;
+                html += `<span class="mini-ball mini-blue ${isBlueMatched ? 'matched' : ''}">${bet.blue.toString().padStart(2, '0')}</span>`;
+
+                html += `</div><div class="prize-info">${prize}</div></div>`;
+            });
+
+            comparisonResultsDiv.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
