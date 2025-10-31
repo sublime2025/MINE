@@ -1,0 +1,132 @@
+/* ==================== 整体页面布局 ==================== */
+body { 
+    /* 背景图片位置：顶部居中 */
+    background-position: top center; 
+    /* 背景图片大小：宽度100%，高度自动 */
+    background-size: 100% auto;
+    /* 最小高度为整个视口高度 */
+    min-height: 100vh;
+    /* 使用flex布局 */
+    display: flex;
+    /* 垂直方向排列 */
+    flex-direction: column;
+    /* 内容对齐到底部（关键：实现底部布局） */
+    justify-content: flex-end;
+    /* 清除默认边距 */
+    margin: 0;
+    padding: 0;
+} 
+
+/* ==================== 主内容区域 ==================== */
+#content { 
+    /* 固定定位 - 让内容固定在视口中 */
+    position: fixed;
+    /* 距离底部100px（可调整此值改变离底部的距离） */
+    bottom: 100px !important;
+    /* 左右对齐到屏幕边缘 */
+    left: 0;
+    right: 0;
+    /* 取消顶部定位，确保使用bottom定位 */
+    top: auto !important;
+} 
+
+/* ==================== 搜索框样式 ==================== */
+.search_bar { 
+    /* 阴影效果：水平偏移 垂直偏移 模糊半径 颜色 */
+    box-shadow: 0 0 18px rgba(70, 70, 40, 0.255);
+    /* 毛玻璃效果：模糊背后内容 */
+    backdrop-filter: blur(5px);
+    /* 半透明白色背景 */
+    background-color: rgba(255, 255, 255, .100);
+    /* 圆角大小（可调整，数值越大越圆） */
+    border-radius: 10px;
+    /* 显示为表格布局 */
+    display: table;
+    /* 搜索框宽度为父容器的88% */
+    width: 88%;
+    /* 搜索框高度 */
+    height: 30px;
+    /* 最大宽度限制 */
+    max-width: 400px;
+    /* 外边距：上下10px，左右自动居中 */
+    margin: 10px auto;
+    /* 文字居中 */
+    text-align: center;
+    /* 字体大小 */
+    font-size: 30px;
+    /* 移除边框 */
+    border: 0;
+    /* 移除聚焦时的轮廓线 */
+    outline: none;
+    /* 字体粗细 */
+    font-weight: 560;
+    /* 过渡动画时间（用于悬停等效果） */
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+    /* 页面加载时的展开动画 */
+    animation: search-bar 1s;
+} 
+
+/* ==================== 图标/书签容器 ==================== */
+#box_container { 
+    /* 容器宽度为父容器的88% */
+    width: 80%;
+    /* 过渡动画时间 */
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+    /* 页面加载时的动画 */
+    animation: box-container 1s;
+    /* 左右自动居中 */
+    margin: 0 auto;
+} 
+
+/* ==================== 单个图标卡片 ==================== */
+/* 单个卡片的外层容器（包括图标和文字） */
+.box { 
+    /* 清除默认边距 */
+    margin: 0; 
+    /* 每个卡片占15%宽度（一行可放约6个） */
+    width: 15%;
+} 
+
+/* 单个卡片的图标区域样式 */
+.title { 
+    /* 阴影效果 */
+    box-shadow: 0 0 18px rgba(70, 70, 40, 0.255);
+    /* 毛玻璃效果 */
+    backdrop-filter: blur(5px);
+    /* 半透明白色背景 */
+    background-color: rgba(255, 255, 255, .100);
+    /* 圆角大小 */
+    border-radius: 10px;
+} 
+
+/* 设置卡片之间的间距 */
+/* 每行除了第5、10、15...个卡片外，其他卡片右侧都有6%的间距 */
+#box_container > .box:not(:nth-child(5n)) { 
+    margin: 0 6% 0 0;
+} 
+
+/* ==================== 搜索建议框 ==================== */
+/* 当在搜索框输入时出现的联想词条框 */
+.bdSug_wpr { 
+    /* 移除边框 */
+    border: 0px none #FFFFFF !important;
+    /* 顶部透明边框（用于间距） */
+    border-top: 13px solid transparent !important;
+    /* 半透明白色背景 */
+    background: rgba(255, 255, 255, 0.2) !important;
+    /* 毛玻璃效果 */
+    backdrop-filter: blur(10px);
+}
+
+/* ==================== 调整说明 ==================== */
+/*
+常用调整项：
+1. 底部距离：修改 #content 的 bottom 值（当前100px）
+2. 搜索框宽度：修改 .search_bar 的 width 值（当前88%）
+3. 图标大小：修改 .box 的 width 值（当前15%，数值越小图标越小）
+4. 圆角大小：修改各处的 border-radius 值（数值越大越圆）
+5. 透明度：修改 rgba() 中的最后一个值（0-1之间，越大越不透明）
+6. 模糊程度：修改 backdrop-filter: blur() 的值（数值越大越模糊）
+7. 阴影强度：修改 box-shadow 的模糊半径和透明度
