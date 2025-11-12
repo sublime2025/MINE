@@ -43,12 +43,19 @@
     var parseInterfaceList = [];
     var selectedInterfaceList = [];
     var originalInterfaceList = [
-        {title:"接口1",type:"1",url:"https://jx.playerjy.com/?url="},
-        {title:"接口2",type:"1",url:"https://jx.m3u8.tv/jiexi/?url="},
-        {title:"接口3",type:"1",url:"https://jx.77flv.cc/?url="},
-        {title:"接口4",type:"1",url:"https://jx.2s0.cn/player/?url="},
-        {title:"接口5",type:"1",url:"https://jx.nnxv.cn/tv.php?url="},
-        {title:"接口6",type:"1",url:"https://jx.mmkv.cn/tv.php?url="},
+		{title:"zyjx",type:"1",url:"https://zyjiexi.com/player/?url="},
+        {title:"jy",type:"1",url:"https://jx.playerjy.com/?url="},
+        {title:"m3u8",type:"1",url:"https://jx.m3u8.tv/jiexi/?url="},
+        {title:"77",type:"1",url:"https://jx.77flv.cc/?url="},
+        {title:"2s",type:"1",url:"https://jx.2s0.cn/player/?url="},
+        {title:"nn",type:"1",url:"https://jx.nnxv.cn/tv.php?url="},
+        {title:"mm",type:"1",url:"https://jx.mmkv.cn/tv.php?url="},
+		{title:"360",type:"1",url:"https://www.360jiexi.com/player/?url="},
+        {title:"Ikun",type:"1",url:"https://https://www.ikdmjx.com/?url="},
+		{title:"OSK",type:"1",url:"https://aojiexi.com/?url="},
+		{title:"Baidu",type:"1",url:"https://jx.jxbdzyw.com/m3u8/?url="},
+		{title:"Xiami",type:"1",url:"https://jx.xmflv.com/?url"},
+		{title:"Mac",type:"1",url:"https://free.maccms.xyz/?url"},
     ];
 
     //自定义 log 函数
