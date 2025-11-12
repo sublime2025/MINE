@@ -51,11 +51,15 @@
         {title:"nn",type:"1",url:"https://jx.nnxv.cn/tv.php?url="},
         {title:"mm",type:"1",url:"https://jx.mmkv.cn/tv.php?url="},
 		{title:"360",type:"1",url:"https://www.360jiexi.com/player/?url="},
-        {title:"Ikun",type:"1",url:"https://https://www.ikdmjx.com/?url="},
-		{title:"OSK",type:"1",url:"https://aojiexi.com/?url="},
-		{title:"Baidu",type:"1",url:"https://jx.jxbdzyw.com/m3u8/?url="},
-		{title:"Xiami",type:"1",url:"https://jx.xmflv.com/?url"},
-		{title:"Mac",type:"1",url:"https://free.maccms.xyz/?url"},
+        {title:"ikun",type:"1",url:"https://https://www.ikdmjx.com/?url="},
+		{title:"osk",type:"1",url:"https://aojiexi.com/?url="},
+		{title:"baidu",type:"1",url:"https://jx.jxbdzyw.com/m3u8/?url="},
+		{title:"xiami",type:"1",url:"https://jx.xmflv.com/?url"},
+		{title:"mac",type:"1",url:"https://free.maccms.xyz/?url"},
+		{title:"8090",type:"1",url:"https://www.8090g.cn/jiexi/?url="},
+		{title:"CK",type:"1",url:"https://www.ckplayer.vip/jiexi/?url="},
+		{title:"py",type:"1",url:"https://www.pouyun.com/?url="},
+        {title:"pg",type:"1",url:"https://www.pangujiexi.com/jiexi/?url="},
     ];
 
     //自定义 log 函数
