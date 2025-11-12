@@ -60,6 +60,7 @@
 		{title:"CK",type:"1",url:"https://www.ckplayer.vip/jiexi/?url="},
 		{title:"py",type:"1",url:"https://www.pouyun.com/?url="},
         {title:"pg",type:"1",url:"https://www.pangujiexi.com/jiexi/?url="},
+		{title:"vip",type:"1",url:"https://vip.zykbf.com/?url="},
     ];
 
     //自定义 log 函数
