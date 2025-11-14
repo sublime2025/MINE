@@ -7,5 +7,5 @@ https://raw.gitmirror.com/sublime2025/MINE/refs/heads/master/MusicFree/Box.json
 ````
 洛雪音源
 ````bash
-https://raw.gitmirror.com/sublime2025/MINE/refs/heads/master/MusicFree/LX_Music.json
+https://raw.gitmirror.com/sublime2025/MINE/refs/heads/master/MusicFree/LX_Music.js
 ````
