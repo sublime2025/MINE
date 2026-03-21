@@ -27,27 +27,27 @@
 		},
 		{
 			"name": "酷狗",
-			"url": "https://gh-proxy.com/raw.githubusercontent.com/sublime2025/MINE/refs/heads/master/MusicFree/mtm/kg.js",
+			"url": "https://gh-proxy.com/raw.githubusercontent.com/sublime2025/MINE/refs/heads/master/MusicFree/yuanli/kg.js",
 			"version": "0.1.4"
 		},
 		{
 			"name": "酷我",
-			"url": "https://gh-proxy.com/raw.githubusercontent.com/sublime2025/MINE/refs/heads/master/MusicFree/mtm/kw.js",
+			"url": "https://gh-proxy.com/raw.githubusercontent.com/sublime2025/MINE/refs/heads/master/MusicFree/yuanli/kw.js",
 			"version": "0.1.6"
 		},
 		{
 			"name": "腾讯",
-			"url": "https://gh-proxy.com/raw.githubusercontent.com/sublime2025/MINE/refs/heads/master/MusicFree/mtm/tx.js",
+			"url": "https://gh-proxy.com/raw.githubusercontent.com/sublime2025/MINE/refs/heads/master/MusicFree/yuanli/tx.js",
 			"version": "0.2.1"
 		},
 		{
 			"name": "咪咕",
-			"url": "https://gh-proxy.com/raw.githubusercontent.com/sublime2025/MINE/refs/heads/master/MusicFree/mtm/mg.js",
+			"url": "https://gh-proxy.com/raw.githubusercontent.com/sublime2025/MINE/refs/heads/master/MusicFree/yuanli/mg.js",
 			"version": "0.2.1"
 		},    
 		{
 			"name": "网易",
-			"url": "https://gh-proxy.com/raw.githubusercontent.com/sublime2025/MINE/refs/heads/master/MusicFree/mtm/wy.js",
+			"url": "https://gh-proxy.com/raw.githubusercontent.com/sublime2025/MINE/refs/heads/master/MusicFree/yuanli/wy.js",
 			"version": "0.2.2"
 		}
     ]
