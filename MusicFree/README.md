@@ -7,5 +7,5 @@ https://cdn.jsdelivr.net/gh/sublime2025/MINE@master/MusicFree/Box.json
 ````
 洛雪音源
 ````bash
-https://cdn.jsdelivr.net/gh/sublime2025/MINE@master/MusicFree/LX_Music.json
+https://cdn.jsdelivr.net/gh/sublime2025/MINE@master/MusicFree/LX_Music.js
 ````
