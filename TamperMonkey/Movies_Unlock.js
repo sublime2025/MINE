@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name         VIP 视频解析
-// @namespace    https://github.com/vip-parser
+// @name         VIP视频解析
+// @namespace    https://github.com/?
 // @version      1.1.0
 // @description  一键解析优酷、爱奇艺、芒果TV、腾讯视频、B站付费内容
 // @author       VIP Parser
@@ -29,6 +29,7 @@
         { title: "CK",   url: "https://www.ckplayer.vip/jiexi/?url=" },
         { title: "剖云", url: "https://www.pouyun.com/?url=" },
         { title: "盘古", url: "https://www.pangujiexi.com/jiexi/?url=" },
+        { title: "如意", url: "https://ruyiplayer.com/?url=" },
     ];
 
     GM_addStyle(`
@@ -221,5 +222,4 @@
     document.addEventListener('click', (e) => {
         if (!container.contains(e.target)) panel.classList.remove('open');
     });
-
 })();
