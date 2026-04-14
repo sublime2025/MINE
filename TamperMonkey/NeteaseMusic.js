@@ -1,10 +1,11 @@
 // ==UserScript==
-// @name         网易云音乐
-// @description  歌曲下载&转存云盘(可批量)、无需文件云盘快传歌曲、云盘匹配纠正、高音质试听、完整歌单列表、评论区显示IP属地、使用指定的IP地址发送评论、歌单歌曲排序(时间、红心数、评论数)、云盘音质提升、本地文件添加音乐元数据等功能。
+// @name         网易云音乐:歌曲下载&转存云盘|云盘快传|云盘匹配纠正|高音质试听
 // @namespace    https://github.com/Cinvin/myuserscripts
-// @version      4.4.1
+// @version      4.4.3
 // @author       cinvin
+// @description  歌曲下载&转存云盘(可批量)、无需文件云盘快传歌曲、云盘匹配纠正、高音质试听、完整歌单列表、评论区显示IP属地、使用指定的IP地址发送评论、歌单歌曲排序(时间、红心数、评论数)、云盘音质提升、本地文件添加音乐元数据等功能。
 // @license      MIT
+// @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAALiSURBVHgBpVZLThtBEH3d40WkIGWWSSDSGMw6cAP7BBlOgDkB5gSYE2BOgDlBnBNgToCzDmQmii0iZYEXsRRBPJ1X6R4+Mz3IKLVxT1f1q9/rais8IQmiCLjZNlBNA8O1iqzGpAoqNcAnjfmgjh9pFYbyA7+ODIJjAjSxmPTp6MDnSJfBV3YzBOfPABdp88zpBd7ERcWjDC7xdp9bXfyXZHtruOqVHNjITW8RCGZ3xOSHClnITwaF6KFeQ7XqGA/tGrbmBO9W4E0tIFL33W9g0gmQpWuY9A30XvEAsT4mCMM7B3MEXf6EZUN8ZvM2BVAY47bPyK6QuvNLLCcGWdcTFPVLnX8OJHrWadsHXsOsKeuvWD6lza7ThHWkzEqJw4gRvodXzK5kodn92KNNa5hz/0Uo7BBGicOMtc0b2MA4ZnZ17h34HUgWL9uakX3wKIfCaVe6yDqcNWv4NUrINIkswfKGGK5j3K1yItkp1vEahfpr3GwCwZTRJ25rRxoqNbdlUS2gNspwe02Qdh2TEymj5+6MNDzNreMnDwfNe4ezwQXexS4bksLE0geOC9qhJxkR/ASeMmlUS1ilCIBXdmWm1m5pg/0Y+mzFQVrclIhY11H+zWbFDXwfkDlHjHrAHA7svMKGzWheFcxUmpwWdwWwxhqLgds6FEAyp7OK8Rbwm/3R+3BZBjCjP6hFRRxO4G96DnVWVMi9kBpzmbND6JpII8meYwbAZqu20/WFcQqmXcZRA2Vv5e01SmKH1hesdDXMPjzCQDiPZlvuviRFvdwTbdmAYfm4PpTxKzwXQ2EJ7UbusWE/sq1VTFr5ZfT4d5khH3bBOfzMqXxMeC/a/Dn0nEt5pnXnwBl3nLFXJEsZF7IWmnIdVwQEya6Bq4E7dy9P1XtRoeO9dUzKD04uLpM7Cj5DOGGznTzyXEo3mTOnJ29AxdWvkr59Nx6Di6inTrnmxzJx3a11WT382zIjW6bTKoy/H+Iy6oHlZ+kAAAAASUVORK5CYII=
 // @match        https://music.163.com/*
 // @require      https://fastly.jsdelivr.net/npm/sweetalert2@11.26.3/dist/sweetalert2.all.min.js
 // @require      https://fastly.jsdelivr.net/npm/ajax-hook@3.0.3/dist/ajaxhook.min.js
@@ -195,13 +196,15 @@ MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDgtQn2JZ34ZC28NWYpAUd98iZ37BUrX/aKzmFbt7cl
     return jumpToPageInput;
   };
   const downloadFileSync = (url2, fileName) => {
-    return new Promise((resolve, reject) => {
-      GM_download({
-        url: url2,
-        name: fileName,
-        onload: () => resolve(`下载 ${fileName} 完成`),
-        onerror: (error) => reject(`下载 ${fileName} 失败`)
-      });
+    return new Promise((resolve) => {
+      const a = document.createElement("a");
+      a.href = url2;
+      a.download = fileName;
+      document.body.appendChild(a);
+      const evt = new MouseEvent("click", { view: unsafeWindow || window, bubbles: false, cancelable: false });
+      a.dispatchEvent(evt);
+      document.body.removeChild(a);
+      resolve(`下载 ${fileName} 完成`);
     });
   };
   const songItemAddToFormat = (song) => {
@@ -247,6 +250,43 @@ MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDgtQn2JZ34ZC28NWYpAUd98iZ37BUrX/aKzmFbt7cl
       sanitized = "_" + sanitized;
     }
     return sanitized || "downloaded_file";
+  };
+  const isLiveSong = (item) => {
+    if (!item) return false;
+    const song = item.simpleSong || item.song || item;
+    const title = song.name || item.name || item.title || song.title || "";
+    const additionalTitle = song.additionalTitle || item.additionalTitle || "";
+    let albumName = "";
+    let albumSubType = "";
+    if (song.al) {
+      if (typeof song.al === "string") {
+        albumName = song.al;
+      } else {
+        albumName = song.al.name || "";
+        albumSubType = song.al.subType || "";
+      }
+    } else if (song.album) {
+      if (typeof song.album === "string") {
+        albumName = song.album;
+      } else {
+        albumName = song.album.name || "";
+        albumSubType = song.album.subType || "";
+      }
+    }
+    if (additionalTitle && additionalTitle.toLowerCase().includes("live")) {
+      return true;
+    }
+    if (title && liveRegex.test(title.toLowerCase())) {
+      return true;
+    }
+    if (albumSubType === "现场版") {
+      return true;
+    }
+    const albumNameLower = albumName.toLowerCase();
+    if (albumNameLower.includes("演唱会") || albumNameLower.includes("concert")) {
+      return true;
+    }
+    return false;
   };
   const scriptSettings = (uiArea) => {
     const btnExport = createBigButton("脚本设置", uiArea, 2);
@@ -1469,6 +1509,25 @@ cleanupItem: function(item) {
 cleanupAll: function() {
     }
   };
+  const saveBlobUrlAsFile = (blobUrl, fileName, config, callbacks) => {
+    if (config.folder === "none") {
+      const a = document.createElement("a");
+      a.href = blobUrl;
+      a.download = fileName;
+      document.body.appendChild(a);
+      const evt = new MouseEvent("click", { view: unsafeWindow || window, bubbles: false, cancelable: false });
+      a.dispatchEvent(evt);
+      document.body.removeChild(a);
+      callbacks.onload();
+    } else {
+      GM_download({
+        url: blobUrl,
+        name: fileName,
+        onload: callbacks.onload,
+        onerror: callbacks.onerror
+      });
+    }
+  };
   const batchDownloadSongs = (songList, config) => {
     if (songList.length === 0) {
       showConfirmBox("没有可下载的歌曲");
@@ -1748,7 +1807,21 @@ width: 10%;
         const LyricItem = LyricObj.oritlrc || LyricObj.orilrc;
         songItem.download.lyricText = LyricItem.lyric;
         if (config.downloadLyric && LyricItem.lyric.length > 0) {
-          saveContentAsFile(LyricItem.lyric, songItem.fileNameWithOutExt + ".lrc");
+          const lrcFileName = songItem.fileNameWithOutExt + ".lrc";
+          if (config.folder === "none") {
+            const blob = new Blob([LyricItem.lyric], { type: "text/plain" });
+            const lrcUrl = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = lrcUrl;
+            a.download = lrcFileName;
+            document.body.appendChild(a);
+            const evt = new MouseEvent("click", { view: unsafeWindow || window, bubbles: false, cancelable: false });
+            a.dispatchEvent(evt);
+            document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(lrcUrl), 1e3);
+          } else {
+            saveContentAsFile(LyricItem.lyric, lrcFileName);
+          }
         }
         const albumContent = content[`/api/v1/album/${songItem.song.al.id}`];
         if (albumContent) {
@@ -1809,17 +1882,15 @@ width: 10%;
             }
             const blob = new Blob([mp3tag.buffer], { type: "audio/mp3" });
             const url2 = URL.createObjectURL(blob);
-            GM_download({
-              url: url2,
-              name: songItem.fileFullName,
-              onload: function() {
+            saveBlobUrlAsFile(url2, songItem.fileFullName, config, {
+              onload: () => {
                 config.finnshCount += 1;
                 Swal.getFooter().innerHTML = `已完成: ${config.finnshCount} 总共: ${config.taskCount}`;
                 songItem.download.prText.innerHTML = `完成`;
                 downloadCleanupManager.addPendingCleanup(songItem, url2);
                 downloadSongSub(threadIndex, songList, config);
               },
-              onerror: function() {
+              onerror: () => {
                 songItem.download.prText.innerHTML = `下载失败`;
                 downloadCleanupManager.addPendingCleanup(songItem, url2);
                 downloadSongSub(threadIndex, songList, config);
@@ -1850,17 +1921,15 @@ width: 10%;
             const newBuffer = flac.save();
             const blob = new Blob([newBuffer], { type: "audio/flac" });
             const url2 = URL.createObjectURL(blob);
-            GM_download({
-              url: url2,
-              name: songItem.fileFullName,
-              onload: function() {
+            saveBlobUrlAsFile(url2, songItem.fileFullName, config, {
+              onload: () => {
                 config.finnshCount += 1;
                 Swal.getFooter().innerHTML = `已完成: ${config.finnshCount} 总共: ${config.taskCount}`;
                 songItem.download.prText.innerHTML = `完成`;
                 downloadCleanupManager.addPendingCleanup(songItem, url2);
                 downloadSongSub(threadIndex, songList, config);
               },
-              onerror: function() {
+              onerror: () => {
                 songItem.download.prText.innerHTML = `下载失败`;
                 downloadCleanupManager.addPendingCleanup(songItem, url2);
                 downloadSongSub(threadIndex, songList, config);
@@ -1870,17 +1939,15 @@ width: 10%;
         } else {
           const blob = new Blob([songItem.download.musicFile], { type: `audio/${songItem.ext}` });
           const url2 = URL.createObjectURL(blob);
-          GM_download({
-            url: url2,
-            name: songItem.fileFullName,
-            onload: function() {
+          saveBlobUrlAsFile(url2, songItem.fileFullName, config, {
+            onload: () => {
               config.finnshCount += 1;
               Swal.getFooter().innerHTML = `已完成: ${config.finnshCount} 总共: ${config.taskCount}`;
               songItem.download.prText.innerHTML = `完成`;
               downloadCleanupManager.addPendingCleanup(songItem, url2);
               downloadSongSub(threadIndex, songList, config);
             },
-            onerror: function() {
+            onerror: () => {
               songItem.download.prText.innerHTML = `下载失败`;
               downloadCleanupManager.addPendingCleanup(songItem, url2);
               downloadSongSub(threadIndex, songList, config);
@@ -2061,10 +2128,7 @@ downloadConfig: Object.assign({
               }
             }
             if (!state.filterOptions.live) {
-              if (s.song.album && s.song.album.subType === "现场版") return false;
-              if (s.song.additionalTitle) {
-                if (s.song.additionalTitle.toLowerCase().includes("live")) return false;
-              } else if (liveRegex.test(s.title.toLowerCase())) return false;
+              if (isLiveSong(s)) return false;
             }
             if (s.privilege.cs && !state.filterOptions.cloud) return false;
             if (!state.filterText) return true;
@@ -2833,7 +2897,7 @@ downloadConfig: Object.assign({
       songsDownUpLoad(this.playlistId, this.operationArea);
       const creatorhomeURL = (_a = document.head.querySelector("[property~='music:creator'][content]")) == null ? void 0 : _a.content;
       const creatorId = new URLSearchParams(new URL(creatorhomeURL).search).get("id");
-      if (creatorId === unsafeWindow.GUser.userId) {
+      if (Number(creatorId) === unsafeWindow.GUser.userId) {
         sortSongs(this.playlistId, this.operationArea);
       }
     }
@@ -3425,7 +3489,7 @@ downloadConfig: Object.assign({
             if (fileData.upload === 1) {
               this.songs[songIndex].cloudId = fileData.songId;
             } else {
-              this.failSongs.push(this.songs[songIndex].title);
+              this.failSongs.push(`文件 ${this.songs[songIndex].fileFullName}  已在用户文件夹中存在`);
               hasFail = true;
             }
           });
@@ -3921,7 +3985,7 @@ updateSongCloudStatus() {
         isNoCopyright: privilege.st < 0,
         isVIP: false,
         isPay: false,
-        isLive: config.name ? liveRegex.test(config.name.toLowerCase()) : false,
+        isLive: isLiveSong(config),
         isInstrumental: false,
         uploaded: false,
         needMatch: config.name === void 0 && songDetail
@@ -3949,7 +4013,7 @@ updateSongCloudStatus() {
       item.picUrl = ((_b = songDetail.al) == null ? void 0 : _b.picUrl) || DEFAULT_PIC_URL;
       item.isVIP = songDetail.fee === 1;
       item.isPay = songDetail.fee === 4;
-      item.isLive = item.name ? liveRegex.test(item.name.toLowerCase()) : false;
+      item.isLive = isLiveSong(songDetail) || isLiveSong(item);
       item.isInstrumental = (songDetail.mark & MATCH_OFFSET_BASE) === MATCH_OFFSET_BASE || item.name && item.name.includes("伴奏") || item.name && item.name.toLowerCase().includes("Instrumental");
     }
     onSongInfoFetched() {
@@ -4866,8 +4930,7 @@ checkSongMatchesFilters(song) {
           if (this.filter.pureMusic === "noPure" && isPureMusic) return false;
         }
         if (this.filter.liveVersion !== "all") {
-          const nameLower = (song.simpleSong.name || "").toLowerCase();
-          const isLive = liveRegex.test(nameLower);
+          const isLive = isLiveSong(song);
           if (this.filter.liveVersion === "live" && !isLive) return false;
           if (this.filter.liveVersion === "noLive" && isLive) return false;
         }
@@ -4938,6 +5001,18 @@ sepreateFilterCloudListPage(currentPage) {
           }
           this.controls.pageArea.appendChild(pageBtn);
         });
+        if (pageIndexs.length < maxPage) {
+          const jumpToPageInput = createPageJumpInput(this.currentPage, maxPage);
+          jumpToPageInput.addEventListener("change", () => {
+            const newPage = parseInt(jumpToPageInput.value);
+            if (newPage >= 1 && newPage <= maxPage) {
+              this.sepreateFilterCloudListPage(newPage);
+            } else {
+              jumpToPageInput.value = this.currentPage;
+            }
+          });
+          this.controls.pageArea.appendChild(jumpToPageInput);
+        }
         const songindex = (currentPage - 1) * this.cloudCountLimit;
         this.fillCloudListTable(this.filter.songs.slice(songindex, songindex + this.cloudCountLimit));
       }
@@ -5047,14 +5122,12 @@ sepreateFilterCloudListPage(currentPage) {
           text: `确定要删除《${song.simpleSong.name}》吗？`,
           showCancelButton: true,
           confirmButtonText: "删除",
-          cancelButtonText: "取消",
-          didClose: () => {
-            this.openCloudList();
-          }
+          cancelButtonText: "取消"
         }).then(async (result) => {
           if (result.isConfirmed) {
             await this.executeDelete([song.simpleSong.id]);
           }
+          this.openCloudList();
         });
       }
       async executeDelete(songIds) {
@@ -5195,15 +5268,13 @@ sepreateFilterCloudListPage(currentPage) {
           text: `确定要删除选中的 ${this.selectedSongIds.size} 首歌曲吗？`,
           showCancelButton: true,
           confirmButtonText: "删除",
-          cancelButtonText: "取消",
-          didClose: () => {
-            this.openCloudList();
-          }
+          cancelButtonText: "取消"
         }).then(async (result) => {
           if (result.isConfirmed) {
             await this.executeDelete(Array.from(this.selectedSongIds));
             this.updateBatchOpsButtonText();
           }
+          this.openCloudList();
         });
       }
       batchAddToPlaylist() {
@@ -5876,7 +5947,8 @@ async _handlePlaylistPopupOpen(song, container) {
                   } else if (res1.data[0].upload === 2) {
                     this.uploadSongWay2Part1(song);
                   } else {
-                    this.uploadSongWay3Part1(song);
+                    song.FailMsg = `文件 ${song.fileFullName} 已在用户文件夹中存在`;
+                    this.uploadSongFail(song);
                   }
                 },
                 onerror: (res) => {
@@ -6167,7 +6239,7 @@ async _handlePlaylistPopupOpen(song, container) {
       }
     }
     uploadSongFail(song) {
-      showTips(`${song.title} 上传失败`, 2);
+      showTips(song.FailMsg || `${song.title} 上传失败`, 2);
       this.failSongs.push(song);
       if (this.onSongDUFail) this.onSongDUFail(song);
       this.uploadNextSong();
@@ -7214,10 +7286,21 @@ width: 8%;
         },
         onload: (content) => {
           if (content.data[0].url !== null) {
-            GM_download({
+            const dlFileName = filename + "." + content.data[0].type.toLowerCase();
+            GM_xmlhttpRequest({
+              method: "GET",
               url: content.data[0].url,
-              name: filename + "." + content.data[0].type.toLowerCase(),
-              onload: function() {
+              responseType: "blob",
+              onload: function(response) {
+                const blobUrl = URL.createObjectURL(response.response);
+                const a = document.createElement("a");
+                a.href = blobUrl;
+                a.download = dlFileName;
+                document.body.appendChild(a);
+                const evt = new MouseEvent("click", { view: unsafeWindow || window, bubbles: false, cancelable: false });
+                a.dispatchEvent(evt);
+                document.body.removeChild(a);
+                setTimeout(() => URL.revokeObjectURL(blobUrl), 1e3);
               },
               onerror: function(e2) {
                 console.error(e2);
@@ -8219,7 +8302,7 @@ durationThreshold: 1,
             </div>
             `,
         confirmButtonText: "开始查找重复歌曲",
-        footer: "<div>手机客户端有回收站功能，误删请从那里恢复。</div><div>live歌曲不去重，因为无法区分是否重复。</div><div>没有用语言区分，因此如《K歌之王》国粤不同版本的歌曲可能会视为重复。</div>",
+        footer: `<div>手机客户端有回收站功能，误删请从那里恢复。</div><div>live歌曲不去重，因为无法区分是否重复。</div><div></div>一些歌曲无法判断为live版，如<a href="https://music.163.com/#/album?id=280573395" target="_blank">FEAR and DREAMS</a>。</div><div>没有用语言区分，因此如《K歌之王》国粤不同版本的歌曲可能会视为重复。</div>`,
         preConfirm: () => {
           const container = Swal.getHtmlContainer();
           const durationEnabledEl = container.querySelector("#cd-duration-group-enabled");
@@ -8285,7 +8368,7 @@ durationThreshold: 1,
               if (song.matchType === "unmatched") {
                 continue;
               }
-              if (liveRegex.test(song.simpleSong.name.toLowerCase())) {
+              if (isLiveSong(song)) {
                 continue;
               }
               const songItem = {
@@ -8773,7 +8856,7 @@ durationThreshold: 1,
       this.filename = nameFileWithoutExt(this.title, this.artist, "artist-title");
       this.songDetailObj = this.songDetailObj;
       if (this.SongRes["/api/v3/song/detail"].privileges[0].plLevel !== "none") {
-        this.createTitle("下载歌曲");
+        this.downLoadTitle = this.createTitle("下载歌曲");
         this.downLoadTableBody = this.createTable().querySelector("tbody");
         const plLevel = this.SongRes["/api/v3/song/detail"].privileges[0].plLevel;
         const dlLevel = this.SongRes["/api/v3/song/detail"].privileges[0].dlLevel;
@@ -8783,7 +8866,7 @@ durationThreshold: 1,
         if (this.SongRes["/api/v3/song/detail"].privileges[0].cs) {
           this.createDLRow(`云盘文件 ${this.SongRes["/api/v3/song/detail"].songs[0].pc.br}k`, plLevel, "pl");
         } else {
-          this.createTitle("转存云盘");
+          this.upLoadTitle = this.createTitle("转存云盘");
           this.upLoadTableBody = this.createTable().querySelector("tbody");
           if (songDlWeight > songPlWeight && this.SongRes["/api/v3/song/detail"].privileges[0].fee === 0) {
             const channel2 = "dl";
@@ -8867,8 +8950,8 @@ durationThreshold: 1,
             this.createDLRow(desc, level, channel);
             this.createULRow(desc, level, channel);
           }
-          this.createHideButtonRow(this.downLoadTableBody);
-          this.createHideButtonRow(this.upLoadTableBody);
+          this.createHideButton(this.downLoadTableBody, this.downLoadTitle);
+          this.createHideButton(this.upLoadTableBody, this.upLoadTitle);
         }
       }
       this.createTitle("歌曲其他信息");
@@ -9004,8 +9087,13 @@ durationThreshold: 1,
     }
     createTitle(title) {
       const h3 = document.createElement("h3");
-      h3.innerHTML = `<span class="f-fl" style="margin-top: 10px;margin-bottom: 10px;">${title}</span>`;
+      h3.style.display = "flex";
+      h3.style.alignItems = "center";
+      h3.style.justifyContent = "space-between";
+      h3.style.width = "100%";
+      h3.innerHTML = `<span style="margin-top: 10px;margin-bottom: 10px;">${title}</span>`;
       this.maindDiv.appendChild(h3);
+      return h3;
     }
     createTable() {
       const table = document.createElement("table");
@@ -9033,13 +9121,15 @@ durationThreshold: 1,
       tbody.appendChild(row);
       return row;
     }
-    createHideButtonRow(tbody) {
+    createHideButton(tbody, titleEl) {
       if (tbody.children.length < 2) return;
-      const row = document.createElement("tr");
-      row.innerHTML = `<td><div><a class="s-fc7">展开<i class="u-icn u-icn-69"></i></a></div></td>`;
-      const btn = row.querySelector("a");
+      const btn = document.createElement("a");
+      btn.className = "s-fc7";
+      btn.style.cursor = "pointer";
+      btn.style.marginRight = "10px";
+      btn.innerHTML = '展开<i class="u-icn u-icn-69"></i>';
       btn.addEventListener("click", () => {
-        for (let i = 1; i < tbody.children.length - 1; i++) {
+        for (let i = 1; i < tbody.children.length; i++) {
           if (tbody.children[i].style.display === "none") {
             tbody.children[i].style.display = "";
           } else {
@@ -9052,7 +9142,7 @@ durationThreshold: 1,
           btn.innerHTML = '展开<i class="u-icn u-icn-69"></i>';
         }
       });
-      tbody.appendChild(row);
+      titleEl.appendChild(btn);
     }
     createButton(desc) {
       let btn = document.createElement("a");
