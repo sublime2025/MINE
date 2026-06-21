@@ -20,16 +20,16 @@
     'use strict';
 
     const PARSERS = [
-        { title: "jy",   url: "https://jx.playerjy.com/?url=" },
-        { title: "m3u8", url: "https://jx.m3u8.tv/jiexi/?url=" },
-        { title: "77",   url: "https://jx.77flv.cc/?url=" },
+        { title: "蜂蜜",   url: "https://json.fongmi.cc/web?url=" },       
         { title: "虾米", url: "https://jx.xmflv.com/?url=" },
-        { title: "MAC",  url: "https://free.maccms.xyz/?url=" },
-        { title: "8090", url: "https://www.8090g.cn/jiexi/?url=" },
-        { title: "CK",   url: "https://www.ckplayer.vip/jiexi/?url=" },
         { title: "剖云", url: "https://www.pouyun.com/?url=" },
         { title: "盘古", url: "https://www.pangujiexi.com/jiexi/?url=" },
         { title: "如意", url: "https://ruyiplayer.com/?url=" },
+        { title: "CK",   url: "https://www.ckplayer.vip/jiexi/?url=" },
+        { title: "77",   url: "https://jx.77flv.cc/?url=" },
+        { title: "MAC",  url: "https://free.maccms.xyz/?url=" },
+        { title: "m3u8", url: "https://jx.m3u8.tv/jiexi/?url=" },
+        { title: "8090", url: "https://www.8090g.cn/jiexi/?url=" },
     ];
 
     GM_addStyle(`
@@ -222,4 +222,5 @@
     document.addEventListener('click', (e) => {
         if (!container.contains(e.target)) panel.classList.remove('open');
     });
+
 })();
